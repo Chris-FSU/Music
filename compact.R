@@ -1,10 +1,11 @@
 # This is an attempt to make a more compressed file format for the notes data.
 
 library(audio)
+library(numbers)
 
 # The higher this number, the more crisp everything will be, but the more info it will take up.
 # It needs to be a power of 2 times 10 so that the note names will be correct.
-x <- 320 
+x <- 20 
 
 F <- sin(1:(2*pi*x) / x)
 rat <- 2^((1:12)/12)
@@ -24,15 +25,29 @@ playnote <- function (note,oct,dur) {
   play(rep(note[(1:(length(note)/(2^oct)))*2^oct],dur*2^oct))
 }
 
+extend <- function(vec) {
+  new.vec <- NA
+  new.vec[1:length(vec)*2] <- vec
+  new.vec[(1:length(vec)*2-1)] <- vec
+  return(new.vec)
+}
+# If I could get that to run quickly, I could use it to drop octaves
+
 #Examples
-playnote(C,3,40)
-playnote(E,3,40)
-playnote(G,4,40)
-playnote(C,4,40)
-playnote(E,4,40)
+playnote(C,1,400)
+playnote(E,1,400)
+playnote(G,2,400)
+playnote(C,2,400)
+playnote(E,2,400)
 
-# This is the highest note I can hear:
-playnote(E,8,40)
+# Testing playing multiple waves
+playchord <- function(noteA,noteB) {
+  thing <- (rep(noteA,LCM(length(noteA),length(noteB))/length(noteA)) +
+              rep(noteB,LCM(length(noteB),length(noteA))/length(noteB)))/2
+  play(thing)
+}
 
-# I can't hear this one:
-playnote(F,9,40)
+
+playchord(A,D)
+playchord(B,G)
+playchord(D,B)
