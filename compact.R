@@ -41,13 +41,22 @@ playnote(C,2,400)
 playnote(E,2,400)
 
 # Testing playing multiple waves
-playchord <- function(noteA,noteB) {
+playchord <- function(noteA,noteB,noteC,dur) {
   thing <- (rep(noteA,LCM(length(noteA),length(noteB))/length(noteA)) +
               rep(noteB,LCM(length(noteB),length(noteA))/length(noteB)))/2
-  play(thing)
+  chord <- (rep(thing,LCM(length(thing),length(noteC))/length(thing)) +
+              rep(noteC,LCM(length(noteC),length(thing))/length(noteC)))/2
+  while(length(chord) < dur*25000){
+    chord <- rep(chord,2)
+  }
+  chord <- chord[1:(dur*25000)]
+  play(chord)
 }
 
+# Test: D major
+# Argument dur is in beats at 120 BPM. dur = 2 is one second.
+# I measured this jankily, so it will need precision later.
+playchord(A,D,Gb,2)
 
-playchord(A,D)
-playchord(B,G)
-playchord(D,B)
+
+
